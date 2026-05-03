@@ -23,1056 +23,153 @@
             --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        input,
-        textarea {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-            background: var(--bg);
-            font-family: var(--font);
-            touch-action: manipulation;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+        input,textarea { -webkit-user-select:text; user-select:text; }
+        html,body { height:100%; overflow:hidden; background:var(--bg); font-family:var(--font); touch-action:manipulation; }
 
-        .stars-container {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            inset: 0;
-            overflow: hidden;
-        }
-        .star {
-            position: absolute;
-            border-radius: 50%;
-            background: #F39C42;
-            animation: twinkle ease-in-out infinite;
-            opacity: 0;
-        }
-        @keyframes twinkle {
-            0%,
-            100% {
-                opacity: 0.1;
-                transform: scale(0.7);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(1.5);
-            }
-        }
-        .particles-container {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 999;
-        }
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: particleBurst 0.85s ease-out forwards;
-        }
-        @keyframes particleBurst {
-            0% {
-                transform: translate(0, 0) scale(1.2);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--dx), var(--dy)) scale(0);
-                opacity: 0;
-            }
-        }
-        .toast {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            background: #3C2415;
-            color: #FFF8F0;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            z-index: 1000;
-            pointer-events: none;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 28px rgba(60, 36, 21, 0.3);
-            border: 1px solid rgba(243, 156, 66, 0.4);
-            white-space: nowrap;
-            letter-spacing: 0.03em;
-        }
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .stars-container { position:fixed; pointer-events:none; z-index:0; inset:0; overflow:hidden; }
+        .star { position:absolute; border-radius:50%; background:#F39C42; animation:twinkle ease-in-out infinite; opacity:0; }
+        @keyframes twinkle { 0%,100% { opacity:0.1; transform:scale(0.7); } 50% { opacity:0.5; transform:scale(1.5); } }
+        .particles-container { position:fixed; inset:0; pointer-events:none; z-index:999; }
+        .particle { position:absolute; border-radius:50%; pointer-events:none; animation:particleBurst 0.85s ease-out forwards; }
+        @keyframes particleBurst { 0% { transform:translate(0,0) scale(1.2); opacity:1; } 100% { transform:translate(var(--dx),var(--dy)) scale(0); opacity:0; } }
+        .toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(120px); background:#3C2415; color:#FFF8F0; padding:10px 20px; border-radius:50px; font-weight:600; font-size:0.8rem; z-index:1000; pointer-events:none; transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275); box-shadow:0 8px 28px rgba(60,36,21,0.3); border:1px solid rgba(243,156,66,0.4); white-space:nowrap; letter-spacing:0.03em; }
+        .toast.show { transform:translateX(-50%) translateY(0); }
 
-        .main-container {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 1;
-            max-width: 500px;
-            margin: 0 auto;
-        }
+        .main-container { height:100%; display:flex; flex-direction:column; position:relative; z-index:1; max-width:500px; margin:0 auto; }
 
-        .profile-bar {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--surface);
-            border-radius: 30px;
-            padding: 4px 8px;
-            margin: 6px 10px;
-            box-shadow: 0 2px 12px rgba(60, 36, 21, 0.08);
-            border: 1px solid rgba(60, 36, 21, 0.06);
-            flex-shrink: 0;
-        }
-        .profile-bar.disabled {
-            pointer-events: none;
-            opacity: 0.6;
-        }
-        .profile-arrow {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--surface-light);
-            border: none;
-            color: var(--text);
-            font-size: 1rem;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .profile-arrow:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .profile-name-display {
-            flex: 1;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text);
-            min-width: 50px;
-            cursor: pointer;
-            padding: 6px 4px;
-            border-radius: 20px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .profile-manage-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--surface-light);
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            cursor: pointer;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .profile-count {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            background: rgba(60, 36, 21, 0.06);
-            padding: 3px 7px;
-            border-radius: 10px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
+        .profile-bar { display:flex; align-items:center; gap:6px; background:var(--surface); border-radius:30px; padding:4px 8px; margin:6px 10px; box-shadow:0 2px 12px rgba(60,36,21,0.08); border:1px solid rgba(60,36,21,0.06); flex-shrink:0; }
+        .profile-bar.disabled { pointer-events:none; opacity:0.6; }
+        .profile-arrow { width:32px; height:32px; border-radius:50%; background:var(--surface-light); border:none; color:var(--text); font-size:1rem; cursor:pointer; flex-shrink:0; transition:all var(--transition); display:flex; align-items:center; justify-content:center; }
+        .profile-arrow:disabled { opacity:0.3; cursor:not-allowed; pointer-events:none; }
+        .profile-name-display { flex:1; text-align:center; font-weight:700; font-size:0.9rem; color:var(--text); min-width:50px; cursor:pointer; padding:6px 4px; border-radius:20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .profile-manage-btn { width:32px; height:32px; border-radius:50%; background:var(--surface-light); border:none; color:var(--text-secondary); font-size:0.9rem; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+        .profile-count { font-size:0.6rem; color:var(--text-muted); background:rgba(60,36,21,0.06); padding:3px 7px; border-radius:10px; white-space:nowrap; flex-shrink:0; }
 
-        .pages-wrapper {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            min-height: 0;
-        }
-        .page {
-            position: absolute;
-            inset: 0;
-            overflow-y: auto;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px 10px;
-            gap: 12px;
-            -webkit-overflow-scrolling: touch;
-            justify-content: center;
-        }
-        .page.active {
-            display: flex;
-        }
+        .pages-wrapper { flex:1; position:relative; overflow:hidden; min-height:0; }
+        .page { position:absolute; inset:0; overflow-y:auto; display:none; flex-direction:column; align-items:center; padding:12px 10px; gap:12px; -webkit-overflow-scrolling:touch; justify-content:center; }
+        .page.active { display:flex; }
 
-        .gacha-machine {
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            animation: machineFloat 5s ease-in-out infinite;
-        }
-        @keyframes machineFloat {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-4px);
-            }
-            60% {
-                transform: translateY(-1px);
-            }
-            85% {
-                transform: translateY(-3px);
-            }
-        }
-        .gacha-machine.shaking {
-            animation: machineShake 0.12s ease-in-out infinite;
-        }
-        @keyframes machineShake {
-            0%,
-            100% {
-                transform: translateX(0) translateY(0);
-            }
-            25% {
-                transform: translateX(-3px) translateY(-2px);
-            }
-            50% {
-                transform: translateX(3px) translateY(1px);
-            }
-            75% {
-                transform: translateX(-2px) translateY(-1px);
-            }
-        }
-        .machine-dome {
-            width: 56%;
-            height: 50px;
-            background: linear-gradient(180deg, #f06050, #d4453b 40%, #a82d25);
-            border-radius: 50% 50% 10px 10px;
-            z-index: 3;
-            box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.25), inset 0 8px 18px rgba(255, 200, 180, 0.3);
-            border: 3px solid #8b1e1a;
-            border-bottom: none;
-            margin-bottom: -5px;
-            position: relative;
-        }
-        .machine-dome::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, #f0c060, #c89030 60%, #7a5010);
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(240, 190, 80, 0.8);
-            border: 2px solid #a07020;
-        }
-        .globe-frame {
-            position: relative;
-            width: var(--globe-size);
-            height: var(--globe-size);
-            z-index: 2;
-            background: radial-gradient(circle at 45% 40%, #e85d4d, #c0392b 50%, #7a1f17);
-            border-radius: 50%;
-            box-shadow: 0 0 0 7px #a82d25, 0 0 0 12px #8b1e1a, 0 0 0 16px #6b1510, 0 10px 30px rgba(0, 0, 0, 0.3),
-                inset 0 -10px 22px rgba(0, 0, 0, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .globe-window {
-            position: absolute;
-            width: calc(var(--globe-size) - 40px);
-            height: calc(var(--globe-size) - 40px);
-            border-radius: 50%;
-            background: rgba(200, 220, 240, 0.12);
-            border: 3px solid rgba(160, 140, 120, 0.4);
-            box-shadow: inset 0 0 70px rgba(170, 200, 230, 0.2), inset 0 0 18px rgba(255, 255, 255, 0.08);
-            z-index: 1;
-            overflow: hidden;
-        }
-        .balls-spinner {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            z-index: 2;
-            transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.1, 1);
-        }
-        .balls-spinner.rolling-fast {
-            animation: spinFast 0.2s linear infinite;
-        }
-        .balls-spinner.rolling-slow {
-            animation: spinSlow 0.55s linear infinite;
-        }
-        @keyframes spinFast {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        @keyframes spinSlow {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        .gacha-ball {
-            position: absolute;
-            border-radius: 50%;
-            z-index: 5;
-            pointer-events: none;
-            box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.2), inset 3px 3px 8px rgba(255, 255, 255, 0.35),
-                0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        .gacha-ball::after {
-            content: '';
-            position: absolute;
-            top: 15%;
-            left: 18%;
-            width: 30%;
-            height: 22%;
-            background: rgba(255, 255, 255, 0.55);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .machine-neck {
-            width: 32%;
-            height: 18px;
-            background: linear-gradient(180deg, #6b1510, #a82d25 50%, #8b1e1a);
-            border-radius: 0 0 6px 6px;
-            z-index: 1;
-            margin-top: -4px;
-            border: 2px solid #5a100c;
-            border-top: none;
-        }
-        .machine-base {
-            width: 64%;
-            min-height: 56px;
-            background: linear-gradient(180deg, #b8352d, #8b1e1a 30%, #6b1510);
-            border-radius: 12px 12px 18px 18px;
-            z-index: 0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border: 3px solid #5a100c;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 18px;
-            margin-top: -2px;
-            position: relative;
-        }
-        .chute {
-            position: absolute;
-            bottom: -7px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 38px;
-            height: 24px;
-            background: linear-gradient(180deg, #3a3a45, #1a1a25);
-            border-radius: 0 0 12px 12px;
-            border: 2px solid #2a2a35;
-            border-top: none;
-        }
-        .handle-container {
-            position: absolute;
-            right: -18px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 8;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .handle-arm {
-            width: 20px;
-            height: 7px;
-            background: linear-gradient(180deg, #d0d0d8, #909098);
-            border-radius: 3px;
-            flex-shrink: 0;
-        }
-        .handle-knob {
-            width: 36px;
-            height: 36px;
-            background: radial-gradient(circle at 38% 32%, #f5f5fa, #c0c0c8 40%, #787880);
-            border-radius: 50%;
-            border: 2px solid #555;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-            margin-left: -2px;
-            position: relative;
-        }
-        .handle-knob::after {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: 22%;
-            width: 26%;
-            height: 18%;
-            background: rgba(255, 255, 255, 0.55);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .handle-knob:active {
-            transform: scale(0.88);
-        }
-        .handle-knob.spinning {
-            animation: knobSpin 0.25s linear infinite;
-        }
-        @keyframes knobSpin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        .gacha-machine { flex-shrink:0; display:flex; flex-direction:column; align-items:center; animation:machineFloat 5s ease-in-out infinite; }
+        @keyframes machineFloat { 0%,100% { transform:translateY(0); } 30% { transform:translateY(-4px); } 60% { transform:translateY(-1px); } 85% { transform:translateY(-3px); } }
+        .gacha-machine.shaking { animation:machineShake 0.12s ease-in-out infinite; }
+        @keyframes machineShake { 0%,100% { transform:translateX(0) translateY(0); } 25% { transform:translateX(-3px) translateY(-2px); } 50% { transform:translateX(3px) translateY(1px); } 75% { transform:translateX(-2px) translateY(-1px); } }
+        .machine-dome { width:56%; height:50px; background:linear-gradient(180deg,#f06050,#d4453b 40%,#a82d25); border-radius:50% 50% 10px 10px; z-index:3; box-shadow:0 -4px 18px rgba(0,0,0,0.25),inset 0 8px 18px rgba(255,200,180,0.3); border:3px solid #8b1e1a; border-bottom:none; margin-bottom:-5px; position:relative; }
+        .machine-dome::after { content:''; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:20px; height:20px; background:radial-gradient(circle,#f0c060,#c89030 60%,#7a5010); border-radius:50%; box-shadow:0 0 20px rgba(240,190,80,0.8); border:2px solid #a07020; }
+        .globe-frame { position:relative; width:var(--globe-size); height:var(--globe-size); z-index:2; background:radial-gradient(circle at 45% 40%,#e85d4d,#c0392b 50%,#7a1f17); border-radius:50%; box-shadow:0 0 0 7px #a82d25,0 0 0 12px #8b1e1a,0 0 0 16px #6b1510,0 10px 30px rgba(0,0,0,0.3),inset 0 -10px 22px rgba(0,0,0,0.25); display:flex; align-items:center; justify-content:center; }
+        .globe-window { position:absolute; width:calc(var(--globe-size) - 40px); height:calc(var(--globe-size) - 40px); border-radius:50%; background:rgba(200,220,240,0.12); border:3px solid rgba(160,140,120,0.4); box-shadow:inset 0 0 70px rgba(170,200,230,0.2),inset 0 0 18px rgba(255,255,255,0.08); z-index:1; overflow:hidden; }
+        .balls-spinner { position:absolute; width:100%; height:100%; border-radius:50%; z-index:2; transition:transform 0.4s cubic-bezier(0.25,0.1,0.1,1); }
+        .balls-spinner.rolling-fast { animation:spinFast 0.2s linear infinite; }
+        .balls-spinner.rolling-slow { animation:spinSlow 0.55s linear infinite; }
+        @keyframes spinFast { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+        @keyframes spinSlow { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+        .gacha-ball { position:absolute; border-radius:50%; z-index:5; pointer-events:none; box-shadow:inset -3px -3px 8px rgba(0,0,0,0.2),inset 3px 3px 8px rgba(255,255,255,0.35),0 2px 8px rgba(0,0,0,0.2); }
+        .gacha-ball::after { content:''; position:absolute; top:15%; left:18%; width:30%; height:22%; background:rgba(255,255,255,0.55); border-radius:50%; pointer-events:none; }
+        .machine-neck { width:32%; height:18px; background:linear-gradient(180deg,#6b1510,#a82d25 50%,#8b1e1a); border-radius:0 0 6px 6px; z-index:1; margin-top:-4px; border:2px solid #5a100c; border-top:none; }
+        .machine-base { width:64%; min-height:56px; background:linear-gradient(180deg,#b8352d,#8b1e1a 30%,#6b1510); border-radius:12px 12px 18px 18px; z-index:0; box-shadow:0 8px 24px rgba(0,0,0,0.3); border:3px solid #5a100c; display:flex; align-items:center; justify-content:center; padding:10px 18px; margin-top:-2px; position:relative; }
+        .chute { position:absolute; bottom:-7px; left:50%; transform:translateX(-50%); width:38px; height:24px; background:linear-gradient(180deg,#3a3a45,#1a1a25); border-radius:0 0 12px 12px; border:2px solid #2a2a35; border-top:none; }
+        .handle-container { position:absolute; right:-18px; top:50%; transform:translateY(-50%); z-index:8; cursor:pointer; display:flex; align-items:center; }
+        .handle-arm { width:20px; height:7px; background:linear-gradient(180deg,#d0d0d8,#909098); border-radius:3px; flex-shrink:0; }
+        .handle-knob { width:36px; height:36px; background:radial-gradient(circle at 38% 32%,#f5f5fa,#c0c0c8 40%,#787880); border-radius:50%; border:2px solid #555; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.3); margin-left:-2px; position:relative; }
+        .handle-knob::after { content:''; position:absolute; top:20%; left:22%; width:26%; height:18%; background:rgba(255,255,255,0.55); border-radius:50%; pointer-events:none; }
+        .handle-knob:active { transform:scale(0.88); }
+        .handle-knob.spinning { animation:knobSpin 0.25s linear infinite; }
+        @keyframes knobSpin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 
-        .result-tray {
-            width: 120px;
-            height: 40px;
-            background: linear-gradient(180deg, #e8d5c0, #c8b090);
-            border-radius: 50%;
-            z-index: 4;
-            margin-top: -12px;
-            box-shadow: 0 5px 18px rgba(60, 36, 21, 0.25);
-            border: 2px solid #9b7b5b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s ease;
-            overflow: hidden;
-        }
-        .result-tray.has-result {
-            width: 170px;
-            height: 66px;
-            border-radius: 30px;
-            background: linear-gradient(180deg, #fff8f0, #f0e0c8);
-            border-color: #c8a060;
-            box-shadow: 0 8px 28px rgba(60, 36, 21, 0.3);
-            animation: trayPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes trayPop {
-            0% {
-                transform: scale(0.7);
-            }
-            60% {
-                transform: scale(1.06);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        .tray-content {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #3C2415;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: all 0.3s ease 0.1s;
-            padding: 0 14px;
-        }
-        .result-tray.has-result .tray-content {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .tray-emoji {
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
-        .tray-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
-            font-size: 1.1rem;
-        }
-        .tray-empty {
-            color: #9B7B6A;
-            font-size: 0.7rem;
-            position: absolute;
-        }
-        .result-tray.has-result .tray-empty {
-            opacity: 0;
-        }
+        .result-tray { width:120px; height:40px; background:linear-gradient(180deg,#e8d5c0,#c8b090); border-radius:50%; z-index:4; margin-top:-12px; box-shadow:0 5px 18px rgba(60,36,21,0.25); border:2px solid #9b7b5b; display:flex; align-items:center; justify-content:center; transition:all 0.4s ease; overflow:hidden; }
+        .result-tray.has-result { width:170px; height:66px; border-radius:30px; background:linear-gradient(180deg,#fff8f0,#f0e0c8); border-color:#c8a060; box-shadow:0 8px 28px rgba(60,36,21,0.3); animation:trayPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+        @keyframes trayPop { 0% { transform:scale(0.7); } 60% { transform:scale(1.06); } 100% { transform:scale(1); } }
+        .tray-content { font-size:1.4rem; font-weight:700; color:#3C2415; display:flex; align-items:center; gap:6px; opacity:0; transform:translateY(5px); transition:all 0.3s ease 0.1s; padding:0 14px; }
+        .result-tray.has-result .tray-content { opacity:1; transform:translateY(0); }
+        .tray-emoji { font-size:2rem; flex-shrink:0; }
+        .tray-text { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100px; font-size:1.1rem; }
+        .tray-empty { color:#9B7B6A; font-size:0.7rem; position:absolute; }
+        .result-tray.has-result .tray-empty { opacity:0; }
 
-        .falling-ball {
-            position: fixed;
-            border-radius: 50%;
-            z-index: 50;
-            pointer-events: none;
-            box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.2), inset 3px 3px 6px rgba(255, 255, 255, 0.35);
-        }
-        @keyframes fallToTray {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.9;
-            }
-            35% {
-                transform: translate(0, 90px) scale(1.15);
-                opacity: 1;
-            }
-            60% {
-                transform: translate(0, 60px) scale(0.92);
-                opacity: 1;
-            }
-            80% {
-                transform: translate(0, 75px) scale(1.03);
-                opacity: 0.6;
-            }
-            100% {
-                transform: translate(0, 65px) scale(0.35);
-                opacity: 0;
-            }
-        }
+        .falling-ball { position:fixed; border-radius:50%; z-index:50; pointer-events:none; box-shadow:inset -2px -2px 6px rgba(0,0,0,0.2),inset 3px 3px 6px rgba(255,255,255,0.35); }
+        @keyframes fallToTray { 0% { transform:translate(0,0) scale(1); opacity:0.9; } 35% { transform:translate(0,90px) scale(1.15); opacity:1; } 60% { transform:translate(0,60px) scale(0.92); opacity:1; } 80% { transform:translate(0,75px) scale(1.03); opacity:0.6; } 100% { transform:translate(0,65px) scale(0.35); opacity:0; } }
 
-        .btn-area {
-            flex-shrink: 0;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-top: 6px;
-        }
-        .btn {
-            padding: 11px 24px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.03em;
-            font-family: var(--font);
-            transition: all var(--transition);
-            min-height: 44px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--surface-light);
-            color: var(--text);
-        }
-        .btn:active {
-            transform: scale(0.93);
-        }
-        .btn-shake {
-            background: linear-gradient(135deg, #E84C3D, #F39C42);
-            color: #FFF8F0;
-            box-shadow: 0 4px 16px rgba(232, 76, 61, 0.35);
-            font-size: 1rem;
-            padding: 14px 36px;
-        }
-        .btn-shake:disabled {
-            background: #C0B0A0;
-            color: #8B7B6B;
-            box-shadow: none;
-            cursor: not-allowed;
-        }
-        .btn-confirm {
-            background: #5CA858;
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(92, 168, 88, 0.35);
-            padding: 11px 28px;
-        }
-        .btn-reroll {
-            background: #fff;
-            color: #E84C3D;
-            border: 2px solid #E84C3D;
-            padding: 11px 28px;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            min-height: 32px;
-            border-radius: 20px;
-        }
-        .btn-outline {
-            background: transparent;
-            color: #E84C3D;
-            border: 2px solid #E84C3D;
-        }
-        .bottom-nav {
-            flex-shrink: 0;
-            display: flex;
-            background: var(--surface);
-            border-top: 1px solid rgba(60, 36, 21, 0.08);
-            padding: 6px 10px calc(6px + var(--safe-bottom));
-            margin: 0 10px;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -2px 10px rgba(60, 36, 21, 0.06);
-        }
-        .nav-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.75rem;
-            padding: 8px 0;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
-        .nav-btn.active {
-            color: #E84C3D;
-            background: rgba(232, 76, 61, 0.08);
-        }
-        .nav-icon {
-            font-size: 1.2rem;
-        }
+        .btn-area { flex-shrink:0; display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin-top:6px; }
+        .btn { padding:11px 24px; font-size:0.9rem; font-weight:700; border-radius:50px; border:none; cursor:pointer; letter-spacing:0.03em; font-family:var(--font); transition:all var(--transition); min-height:44px; display:inline-flex; align-items:center; gap:5px; background:var(--surface-light); color:var(--text); }
+        .btn:active { transform:scale(0.93); }
+        .btn-shake { background:linear-gradient(135deg,#E84C3D,#F39C42); color:#FFF8F0; box-shadow:0 4px 16px rgba(232,76,61,0.35); font-size:1rem; padding:14px 36px; }
+        .btn-shake:disabled { background:#C0B0A0; color:#8B7B6B; box-shadow:none; cursor:not-allowed; }
+        .btn-confirm { background:#5CA858; color:#fff; box-shadow:0 4px 14px rgba(92,168,88,0.35); padding:11px 28px; }
+        .btn-reroll { background:#fff; color:#E84C3D; border:2px solid #E84C3D; padding:11px 28px; }
+        .btn-sm { padding:6px 14px; font-size:0.75rem; min-height:32px; border-radius:20px; }
+        .btn-outline { background:transparent; color:#E84C3D; border:2px solid #E84C3D; }
+        .bottom-nav { flex-shrink:0; display:flex; background:var(--surface); border-top:1px solid rgba(60,36,21,0.08); padding:6px 10px calc(6px + var(--safe-bottom)); margin:0 10px; border-radius:20px 20px 0 0; box-shadow:0 -2px 10px rgba(60,36,21,0.06); }
+        .nav-btn { flex:1; background:transparent; border:none; color:var(--text-secondary); font-weight:600; font-size:0.75rem; padding:8px 0; border-radius:16px; cursor:pointer; transition:all var(--transition); display:flex; flex-direction:column; align-items:center; gap:2px; }
+        .nav-btn.active { color:#E84C3D; background:rgba(232,76,61,0.08); }
+        .nav-icon { font-size:1.2rem; }
 
-        .records-tabs {
-            display: flex;
-            gap: 2px;
-            background: var(--surface);
-            border-radius: 26px;
-            padding: 3px;
-            margin-top: 4px;
-            width: 100%;
-            flex-shrink: 0;
-        }
-        .records-tab {
-            flex: 1;
-            padding: 8px 4px;
-            border-radius: 22px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-            font-family: var(--font);
-            white-space: nowrap;
-            text-align: center;
-            min-height: 34px;
-        }
-        .records-tab.active {
-            background: #F39C42;
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(243, 156, 66, 0.4);
-        }
+        .records-tabs { display:flex; gap:2px; background:var(--surface); border-radius:26px; padding:3px; margin-top:4px; width:100%; flex-shrink:0; }
+        .records-tab { flex:1; padding:8px 4px; border-radius:22px; border:none; background:transparent; cursor:pointer; font-weight:600; font-size:0.72rem; color:var(--text-secondary); font-family:var(--font); white-space:nowrap; text-align:center; min-height:34px; }
+        .records-tab.active { background:#F39C42; color:#fff; box-shadow:0 2px 8px rgba(243,156,66,0.4); }
 
-        .record-panel {
-            background: var(--surface);
-            border-radius: var(--radius);
-            width: 100%;
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        .record-panel.hidden {
-            display: none;
-        }
-        .panel-controls {
-            flex-shrink: 0;
-            padding: 12px 12px 8px 12px;
-        }
-        .panel-scroll-area {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 0 12px 12px 12px;
-        }
-        .log-controls,
-        .stats-controls {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .log-mode-select,
-        .stats-mode-select {
-            flex: 1;
-            padding: 6px 10px;
-            border-radius: 18px;
-            background: var(--surface-light);
-            color: var(--text);
-            border: 1px solid rgba(60, 36, 21, 0.12);
-            font-family: var(--font);
-            font-size: 0.75rem;
-            outline: none;
-            min-width: 80px;
-        }
-        .stats-mode-select {
-            padding-right: 36px;
-        }
-        .log-date-input,
-        .stats-date-input {
-            width: 140px;
-            padding: 6px 10px;
-            border-radius: 18px;
-            background: var(--surface-light);
-            color: var(--text);
-            border: 1px solid rgba(60, 36, 21, 0.12);
-            font-family: var(--font);
-            font-size: 0.75rem;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            min-height: 34px;
-        }
-        .log-date-input::-webkit-calendar-picker-indicator,
-        .stats-date-input::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-            opacity: 0.6;
-        }
+        .record-panel { background:var(--surface); border-radius:var(--radius); width:100%; flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+        .record-panel.hidden { display:none; }
+        .panel-controls { flex-shrink:0; padding:12px 12px 8px 12px; }
+        .panel-scroll-area { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:0 12px 12px 12px; }
+        .log-controls,.stats-controls { display:flex; gap:6px; margin-bottom:8px; align-items:center; flex-wrap:wrap; }
+        .log-mode-select,.stats-mode-select { flex:1; padding:6px 10px; border-radius:18px; background:var(--surface-light); color:var(--text); border:1px solid rgba(60,36,21,0.12); font-family:var(--font); font-size:0.75rem; outline:none; min-width:80px; }
+        .stats-mode-select { padding-right:36px; }
+        .log-date-input,.stats-date-input { width:140px; padding:6px 10px; border-radius:18px; background:var(--surface-light); color:var(--text); border:1px solid rgba(60,36,21,0.12); font-family:var(--font); font-size:0.75rem; outline:none; -webkit-appearance:none; appearance:none; min-height:34px; }
+        .log-date-input::-webkit-calendar-picker-indicator,.stats-date-input::-webkit-calendar-picker-indicator { cursor:pointer; opacity:0.6; }
 
-        .log-list {
-            list-style: none;
-        }
-        .log-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 8px;
-            border-radius: 8px;
-            margin-bottom: 3px;
-            background: rgba(60, 36, 21, 0.03);
-            font-size: 0.75rem;
-            color: var(--text);
-        }
-        .log-emoji {
-            font-size: 1.1rem;
-            flex-shrink: 0;
-        }
-        .log-food {
-            font-weight: 600;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .log-time {
-            font-size: 0.55rem;
-            color: var(--text-muted);
-            margin-right: 2px;
-        }
-        .log-del-btn {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 0.6rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(224, 85, 80, 0.15);
-            color: #E05550;
-            flex-shrink: 0;
-            transition: all var(--transition);
-        }
-        .log-del-btn:active {
-            background: rgba(224, 85, 80, 0.35);
-            transform: scale(0.9);
-        }
-        .log-empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-size: 0.8rem;
-        }
-        .log-group-header {
-            font-weight: 700;
-            padding: 4px 8px;
-            background: rgba(232, 76, 61, 0.08);
-            border-radius: 6px;
-            margin-bottom: 4px;
-            font-size: 0.75rem;
-            color: #E84C3D;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        .log-list { list-style:none; }
+        .log-item { display:flex; align-items:center; gap:6px; padding:7px 8px; border-radius:8px; margin-bottom:3px; background:rgba(60,36,21,0.03); font-size:0.75rem; color:var(--text); }
+        .log-emoji { font-size:1.1rem; flex-shrink:0; }
+        .log-food { font-weight:600; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .log-time { font-size:0.55rem; color:var(--text-muted); margin-right:2px; }
+        .log-del-btn { width:22px; height:22px; border-radius:50%; border:none; cursor:pointer; font-size:0.6rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(224,85,80,0.15); color:#E05550; flex-shrink:0; transition:all var(--transition); }
+        .log-del-btn:active { background:rgba(224,85,80,0.35); transform:scale(0.9); }
+        .log-empty { text-align:center; color:var(--text-muted); padding:30px; font-size:0.8rem; }
+        .log-group-header { font-weight:700; padding:4px 8px; background:rgba(232,76,61,0.08); border-radius:6px; margin-bottom:4px; font-size:0.75rem; color:#E84C3D; }
 
-        .stats-summary {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 10px;
-        }
-        .stat-card {
-            flex: 1;
-            background: rgba(60, 36, 21, 0.03);
-            border-radius: 8px;
-            padding: 8px;
-            text-align: center;
-            border: 1px solid rgba(60, 36, 21, 0.06);
-        }
-        .stat-value {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #E84C3D;
-        }
-        .stat-label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-        }
-        .chart-container canvas,
-        .pie-container canvas {
-            display: block;
-            width: 100%;
-            min-width: 260px;
-        }
-        .chart-empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-size: 0.8rem;
-            display: none;
-        }
+        .stats-summary { display:flex; gap:6px; margin-bottom:10px; }
+        .stat-card { flex:1; background:rgba(60,36,21,0.03); border-radius:8px; padding:8px; text-align:center; border:1px solid rgba(60,36,21,0.06); }
+        .stat-value { font-size:1.1rem; font-weight:800; color:#E84C3D; }
+        .stat-label { font-size:0.6rem; color:var(--text-muted); }
+        .chart-container canvas,.pie-container canvas { display:block; width:100%; min-width:260px; }
+        .chart-empty { text-align:center; color:var(--text-muted); padding:30px; font-size:0.8rem; display:none; }
 
-        .menu-header {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .menu-search {
-            flex: 1;
-            padding: 7px 12px;
-            border-radius: 18px;
-            border: 1px solid rgba(60, 36, 21, 0.12);
-            background: var(--surface-light);
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 0.78rem;
-            outline: none;
-        }
-        .menu-list {
-            list-style: none;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            margin-bottom: 4px;
-            background: rgba(60, 36, 21, 0.03);
-            font-size: 0.78rem;
-            color: var(--text);
-        }
-        .menu-item-emoji {
-            font-size: 1.3rem;
-            width: 32px;
-            text-align: center;
-        }
-        .menu-item-name {
-            flex: 1;
-            font-weight: 600;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .menu-item-category {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            background: rgba(60, 36, 21, 0.05);
-            padding: 2px 8px;
-            border-radius: 8px;
-            margin-right: 8px;
-        }
-        .menu-item-actions {
-            display: flex;
-            gap: 4px;
-        }
-        .btn-edit-item,
-        .btn-delete-item {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 0.75rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(60, 36, 21, 0.08);
-            color: var(--text);
-        }
-        .btn-delete-item {
-            background: rgba(224, 85, 80, 0.2);
-            color: #E05550;
-        }
-        .menu-stats {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 6px;
-        }
-        .menu-empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px;
-            font-size: 0.8rem;
-        }
+        .menu-header { display:flex; gap:6px; margin-bottom:8px; }
+        .menu-search { flex:1; padding:7px 12px; border-radius:18px; border:1px solid rgba(60,36,21,0.12); background:var(--surface-light); color:var(--text); font-family:var(--font); font-size:0.78rem; outline:none; }
+        .menu-list { list-style:none; }
+        .menu-item { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; margin-bottom:4px; background:rgba(60,36,21,0.03); font-size:0.78rem; color:var(--text); }
+        .menu-item-emoji { font-size:1.3rem; width:32px; text-align:center; }
+        .menu-item-name { flex:1; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .menu-item-category { font-size:0.65rem; color:var(--text-muted); background:rgba(60,36,21,0.05); padding:2px 8px; border-radius:8px; margin-right:8px; }
+        .menu-item-actions { display:flex; gap:4px; }
+        .btn-edit-item,.btn-delete-item { width:30px; height:30px; border-radius:50%; border:none; cursor:pointer; font-size:0.75rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(60,36,21,0.08); color:var(--text); }
+        .btn-delete-item { background:rgba(224,85,80,0.2); color:#E05550; }
+        .menu-stats { font-size:0.6rem; color:var(--text-muted); text-align:center; margin-top:6px; }
+        .menu-empty { text-align:center; color:var(--text-muted); padding:30px; font-size:0.8rem; }
 
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(60, 36, 21, 0.55);
-            z-index: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-        .modal {
-            background: #FFF8F0;
-            border-radius: var(--radius);
-            padding: 20px;
-            width: 100%;
-            max-width: 360px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid rgba(60, 36, 21, 0.1);
-            box-shadow: 0 12px 40px rgba(60, 36, 21, 0.2);
-        }
-        .modal h3 {
-            font-size: 1rem;
-            margin-bottom: 15px;
-            color: #3C2415;
-            text-align: center;
-        }
-        .modal .form-group {
-            margin-bottom: 14px;
-        }
-        .modal .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: #6B4F3A;
-            margin-bottom: 4px;
-        }
-        .modal .form-group input {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(60, 36, 21, 0.15);
-            background: #FFF1E6;
-            color: #3C2415;
-            font-family: var(--font);
-            font-size: 0.85rem;
-            outline: none;
-        }
-        .modal .form-group input:focus {
-            border-color: #F39C42;
-            box-shadow: 0 0 0 3px rgba(243, 156, 66, 0.12);
-        }
-        .emoji-picker-large {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
-        .emoji-picker-large button {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            background: #FFF1E6;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .emoji-picker-large button.selected {
-            border-color: #F39C42;
-            box-shadow: 0 0 14px rgba(243, 156, 66, 0.3);
-            background: rgba(243, 156, 66, 0.1);
-        }
-        .selected-emoji-display {
-            text-align: center;
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-        }
-        .modal .btn-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 18px;
-        }
+        .modal-overlay { position:fixed; inset:0; background:rgba(60,36,21,0.55); z-index:800; display:flex; align-items:center; justify-content:center; padding:16px; }
+        .modal { background:#FFF8F0; border-radius:var(--radius); padding:0; width:100%; max-width:360px; max-height:85vh; overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(60,36,21,0.1); box-shadow:0 12px 40px rgba(60,36,21,0.2); }
+        .modal-header { padding:16px 20px 8px; text-align:center; flex-shrink:0; }
+        .modal-header h3 { font-size:1rem; color:#3C2415; }
+        .modal-body { padding:0 20px; flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+        .modal-footer { padding:12px 20px 20px; flex-shrink:0; }
+        .modal .form-group { margin-bottom:14px; }
+        .modal .form-group label { display:block; font-size:0.75rem; color:#6B4F3A; margin-bottom:4px; }
+        .modal .form-group input { width:100%; padding:10px 14px; border-radius:20px; border:1px solid rgba(60,36,21,0.15); background:#FFF1E6; color:#3C2415; font-family:var(--font); font-size:0.85rem; outline:none; }
+        .modal .form-group input:focus { border-color:#F39C42; box-shadow:0 0 0 3px rgba(243,156,66,0.12); }
+        .emoji-picker-large { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+        .emoji-picker-large button { width:42px; height:42px; border-radius:50%; border:2px solid transparent; background:#FFF1E6; cursor:pointer; font-size:1.5rem; transition:all 0.2s; display:flex; align-items:center; justify-content:center; }
+        .emoji-picker-large button.selected { border-color:#F39C42; box-shadow:0 0 14px rgba(243,156,66,0.3); background:rgba(243,156,66,0.1); }
+        .selected-emoji-display { text-align:center; font-size:2.8rem; margin-bottom:10px; }
+        .modal .btn-row { display:flex; gap:10px; justify-content:center; margin-top:0; }
 
-        .profile-manage-list {
-            list-style: none;
-            max-height: 40vh;
-            overflow-y: auto;
-        }
-        .profile-manage-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            margin-bottom: 4px;
-            background: rgba(60, 36, 21, 0.03);
-        }
-        .profile-manage-item.active-profile {
-            border: 2px solid #F39C42;
-            background: rgba(243, 156, 66, 0.06);
-        }
-        .profile-manage-name {
-            flex: 1;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #3C2415;
-            display: flex;
-            align-items: center;
-        }
-        .profile-manage-count {
-            font-size: 0.65rem;
-            color: #9B7B6A;
-            margin-right: 8px;
-        }
-        .profile-manage-item button {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(60, 36, 21, 0.08);
-            color: #3C2415;
-        }
-        .profile-manage-item .del-btn {
-            background: rgba(224, 85, 80, 0.2);
-            color: #E05550;
-        }
+        .profile-manage-list { list-style:none; max-height:40vh; overflow-y:auto; }
+        .profile-manage-item { display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:10px; margin-bottom:4px; background:rgba(60,36,21,0.03); }
+        .profile-manage-item.active-profile { border:2px solid #F39C42; background:rgba(243,156,66,0.06); }
+        .profile-manage-name { flex:1; font-weight:600; font-size:0.9rem; color:#3C2415; display:flex; align-items:center; }
+        .profile-manage-count { font-size:0.65rem; color:#9B7B6A; margin-right:8px; }
+        .profile-manage-item button { width:32px; height:32px; border-radius:50%; border:none; cursor:pointer; font-size:0.8rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(60,36,21,0.08); color:#3C2415; }
+        .profile-manage-item .del-btn { background:rgba(224,85,80,0.2); color:#E05550; }
     </style>
 </head>
 <body>
@@ -1122,7 +219,7 @@
                 <div class="record-panel" id="subLog">
                     <div class="panel-controls">
                         <div class="log-controls">
-                            <input type="date" class="log-date-input" id="logDateInput" placeholder="选择日期筛选">
+                            <input type="date" class="log-date-input" id="logDateInput">
                         </div>
                     </div>
                     <div class="panel-scroll-area">
@@ -1134,12 +231,12 @@
                     <div class="panel-controls">
                         <div class="stats-controls">
                             <select class="stats-mode-select" id="statsModeSelect">
-                                <option value="all" selected>全部时段</option>
-                                <option value="day">日视图</option>
+                                <option value="all">全部时段</option>
+                                <option value="day" selected>日视图</option>
                                 <option value="month">月视图</option>
                                 <option value="year">年视图</option>
                             </select>
-                            <input type="date" class="stats-date-input" id="statsDateInput" disabled>
+                            <input type="date" class="stats-date-input" id="statsDateInput">
                         </div>
                     </div>
                     <div class="panel-scroll-area">
@@ -1208,18 +305,7 @@
                 saveData(appData);
             }
 
-            function deleteLog(timestamp) {
-                const logs = appData.logs;
-                const idx = logs.findIndex(l => l.timestamp === timestamp);
-                if (idx === -1) return;
-                const log = logs[idx];
-                openConfirmModal('删除记录', `确定删除 <b>${log.emoji} ${log.food}</b> (${log.date} ${log.time}) 吗？`, () => {
-                    logs.splice(idx, 1);
-                    saveData(appData);
-                    refreshAll();
-                    showToast('🗑️ 已删除该记录');
-                });
-            }
+            function deleteLog(timestamp) { const logs = appData.logs; const idx = logs.findIndex(l => l.timestamp === timestamp); if (idx === -1) return; const log = logs[idx]; openConfirmModal('删除记录', `确定删除 <b>${log.emoji} ${log.food}</b> (${log.date} ${log.time}) 吗？`, () => { logs.splice(idx, 1); saveData(appData); refreshAll(); showToast('🗑️ 已删除该记录'); }); }
 
             const $ = s => document.querySelector(s);
             const $$ = s => document.querySelectorAll(s);
@@ -1236,7 +322,7 @@
             const $statsModeSelect = $('#statsModeSelect'), $statsDateInput = $('#statsDateInput');
             let isRolling = false, currentResult = null, shakeCooldown = false, gachaBalls = [], menuFilter = '';
             let logFilterDate = '';
-            let statsViewMode = 'all', statsFilterDate = '';
+            let statsViewMode = 'day', statsFilterDate = '';
 
             function createStars() { const frag = document.createDocumentFragment(); for(let i=0;i<40;i++) { const s = document.createElement('div'); s.className='star'; s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;animation-duration:${Math.random()*3+2}s;animation-delay:${Math.random()*4}s;`; frag.appendChild(s); } document.getElementById('starsContainer').appendChild(frag); }
             function lighten(c,p){ const n=parseInt(c.slice(1),16); const a=Math.round(2.55*p); return `rgb(${Math.min(255,(n>>16)+a)},${Math.min(255,((n>>8)&0xFF)+a)},${Math.min(255,(n&0xFF)+a)})`; }
@@ -1285,10 +371,7 @@
                 filtered.forEach(l => { const dateKey = l.date.trim(); if(!groups[dateKey]) groups[dateKey] = []; groups[dateKey].push(l); });
                 const sortedDates = Object.keys(groups).sort((a,b)=>b.localeCompare(a));
                 let html = '';
-                sortedDates.forEach(date => {
-                    html += `<div class="log-group-header">📅 ${date}</div>`;
-                    groups[date].forEach(l => html += `<li class="log-item"><span class="log-emoji">${l.emoji}</span><span class="log-food" title="${l.food}">${l.food}</span><span class="log-time">${l.time}</span><button class="log-del-btn" data-ts="${l.timestamp}" title="删除此记录">×</button></li>`);
-                });
+                sortedDates.forEach(date => { html += `<div class="log-group-header">📅 ${date}</div>`; groups[date].forEach(l => html += `<li class="log-item"><span class="log-emoji">${l.emoji}</span><span class="log-food" title="${l.food}">${l.food}</span><span class="log-time">${l.time}</span><button class="log-del-btn" data-ts="${l.timestamp}" title="删除此记录">×</button></li>`); });
                 $logList.innerHTML = html || '<li class="log-empty">该日期没有记录</li>';
                 $logList.querySelectorAll('.log-del-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); deleteLog(parseInt(btn.dataset.ts)); }));
             }
@@ -1296,185 +379,32 @@
             function getFilteredLogsForStats() {
                 let logs = getLogs().filter(l=>l.profile===getActiveProfile());
                 if(statsViewMode==='all') return logs;
-                if(statsFilterDate) {
-                    const filterTrim = statsFilterDate.trim();
-                    if(statsViewMode==='day') logs = logs.filter(l=>l.date.trim()===filterTrim);
-                    else if(statsViewMode==='month') logs = logs.filter(l=>l.date.trim().startsWith(filterTrim));
-                    else if(statsViewMode==='year') logs = logs.filter(l=>l.date.trim().startsWith(filterTrim));
-                }
+                if(statsFilterDate) { const filterTrim = statsFilterDate.trim(); if(statsViewMode==='day') logs = logs.filter(l=>l.date.trim()===filterTrim); else if(statsViewMode==='month') logs = logs.filter(l=>l.date.trim().startsWith(filterTrim)); else if(statsViewMode==='year') logs = logs.filter(l=>l.date.trim().startsWith(filterTrim)); }
                 return logs;
             }
 
-            function animateValue(el, start, end, duration) {
-                const range = end - start;
-                const startTime = performance.now();
-                const step = (now) => {
-                    const elapsed = now - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    el.textContent = Math.floor(start + range * progress);
-                    if (progress < 1) requestAnimationFrame(step);
-                };
-                requestAnimationFrame(step);
-            }
+            function animateValue(el, start, end, duration) { const range = end - start; const startTime = performance.now(); const step = (now) => { const elapsed = now - startTime; const progress = Math.min(elapsed / duration, 1); el.textContent = Math.floor(start + range * progress); if (progress < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
 
             let barAnimFrame = null;
-            function drawBarChart(entries, otherCount) {
-                if (barAnimFrame) cancelAnimationFrame(barAnimFrame);
-                const canvas = $chartCanvas;
-                const dpr = Math.min(devicePixelRatio||1,2), cw = Math.max(canvas.parentElement.clientWidth-4,240);
-                const bh=26, gap=5, tp=24, bp=8, lp=80, rp=36;
-                const displayBars = entries.slice(0,12);
-                let displayList = [...displayBars];
-                if (entries.length > 12) {
-                    const other = entries.slice(12).reduce((s,[,d])=>s+d.count,0);
-                    if (other>0) displayList.push(['其他',{count:other,emoji:'📦'}]);
-                }
-                const th = tp + displayList.length*(bh+gap) + bp;
-                canvas.width = cw*dpr; canvas.height = th*dpr;
-                canvas.style.width = cw+'px'; canvas.style.height = th+'px';
-                const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr);
-                const maxC = displayList[0][1].count, chartW = cw-lp-rp;
-                const colors = ['#E84C3D','#F39C42','#e86840','#f0c070','#e89050','#f5d080'];
-                let progress = 0;
-                const STEP = 0.05;
-                function drawFrame() {
-                    ctx.clearRect(0,0,cw,th);
-                    ctx.fillStyle='#6B4F3A'; ctx.font='bold 11px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillText('📊 排行',6,tp-5);
-                    displayList.forEach(([food,data],i)=>{
-                        const y = tp + i*(bh+gap);
-                        const targetW = Math.max((data.count/maxC)*chartW,6);
-                        const barW = targetW * progress;
-                        const color = colors[i%6];
-                        ctx.fillStyle='#6B4F3A'; ctx.font='600 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='right';
-                        ctx.fillText(data.emoji+' '+(food.length>5?food.slice(0,4)+'…':food), lp-4, y+bh/2+2);
-                        ctx.fillStyle=color; ctx.beginPath(); ctx.roundRect(lp,y,barW,bh,5); ctx.fill();
-                        ctx.fillStyle='#3C2415'; ctx.font='bold 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='left';
-                        ctx.fillText(Math.floor(data.count*progress)+'次', lp+barW+5, y+bh/2+2);
-                    });
-                    progress += STEP;
-                    if (progress < 1) { barAnimFrame = requestAnimationFrame(drawFrame); }
-                    else {
-                        ctx.clearRect(0,0,cw,th);
-                        ctx.fillStyle='#6B4F3A'; ctx.font='bold 11px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillText('📊 排行',6,tp-5);
-                        displayList.forEach(([food,data],i)=>{
-                            const y = tp + i*(bh+gap);
-                            const barW = Math.max((data.count/maxC)*chartW,6);
-                            const color = colors[i%6];
-                            ctx.fillStyle='#6B4F3A'; ctx.font='600 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='right';
-                            ctx.fillText(data.emoji+' '+(food.length>5?food.slice(0,4)+'…':food), lp-4, y+bh/2+2);
-                            ctx.fillStyle=color; ctx.beginPath(); ctx.roundRect(lp,y,barW,bh,5); ctx.fill();
-                            ctx.fillStyle='#3C2415'; ctx.font='bold 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='left';
-                            ctx.fillText(data.count+'次', lp+barW+5, y+bh/2+2);
-                        });
-                    }
-                }
-                drawFrame();
-            }
+            function drawBarChart(entries, otherCount) { if (barAnimFrame) cancelAnimationFrame(barAnimFrame); const canvas = $chartCanvas; const dpr = Math.min(devicePixelRatio||1,2), cw = Math.max(canvas.parentElement.clientWidth-4,240); const bh=26, gap=5, tp=24, bp=8, lp=80, rp=36; const displayBars = entries.slice(0,12); let displayList = [...displayBars]; if (entries.length > 12) { const other = entries.slice(12).reduce((s,[,d])=>s+d.count,0); if(other>0) displayList.push(['其他',{count:other,emoji:'📦'}]); } const th = tp + displayList.length*(bh+gap) + bp; canvas.width = cw*dpr; canvas.height = th*dpr; canvas.style.width = cw+'px'; canvas.style.height = th+'px'; const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr); const maxC = displayList[0][1].count, chartW = cw-lp-rp; const colors = ['#E84C3D','#F39C42','#e86840','#f0c070','#e89050','#f5d080']; let progress = 0; const STEP = 0.05; function drawFrame() { ctx.clearRect(0,0,cw,th); ctx.fillStyle='#6B4F3A'; ctx.font='bold 11px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillText('📊 排行',6,tp-5); displayList.forEach(([food,data],i)=>{ const y = tp+i*(bh+gap); const targetW = Math.max((data.count/maxC)*chartW,6); const barW = targetW * progress; const color = colors[i%6]; ctx.fillStyle='#6B4F3A'; ctx.font='600 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='right'; ctx.fillText(data.emoji+' '+(food.length>5?food.slice(0,4)+'…':food), lp-4, y+bh/2+2); ctx.fillStyle=color; ctx.beginPath(); ctx.roundRect(lp,y,barW,bh,5); ctx.fill(); ctx.fillStyle='#3C2415'; ctx.font='bold 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='left'; ctx.fillText(Math.floor(data.count*progress)+'次', lp+barW+5, y+bh/2+2); }); progress += STEP; if (progress < 1) { barAnimFrame = requestAnimationFrame(drawFrame); } else { ctx.clearRect(0,0,cw,th); ctx.fillStyle='#6B4F3A'; ctx.font='bold 11px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillText('📊 排行',6,tp-5); displayList.forEach(([food,data],i)=>{ const y = tp+i*(bh+gap); const barW = Math.max((data.count/maxC)*chartW,6); const color = colors[i%6]; ctx.fillStyle='#6B4F3A'; ctx.font='600 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='right'; ctx.fillText(data.emoji+' '+(food.length>5?food.slice(0,4)+'…':food), lp-4, y+bh/2+2); ctx.fillStyle=color; ctx.beginPath(); ctx.roundRect(lp,y,barW,bh,5); ctx.fill(); ctx.fillStyle='#3C2415'; ctx.font='bold 9px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='left'; ctx.fillText(data.count+'次', lp+barW+5, y+bh/2+2); }); } } drawFrame(); }
 
             let pieAnimFrame = null;
-            function drawPieChartAnimated(topEntries, otherCount, total) {
-                if (pieAnimFrame) cancelAnimationFrame(pieAnimFrame);
-                const canvas = $pieCanvas;
-                const container = canvas.parentElement;
-                const cw = Math.max(container.clientWidth-8,280);
-                const pieSize = Math.min(cw*0.65,160);
-                const cx = cw/2, cy = pieSize/2+30;
-                const radius = pieSize/2;
-                const totalHeight = pieSize + 70;
-                const dpr = Math.min(devicePixelRatio||1,2);
-                canvas.width = cw*dpr; canvas.height = totalHeight*dpr;
-                canvas.style.width = cw+'px'; canvas.style.height = totalHeight+'px';
-                const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr);
-                const colors = ['#E84C3D','#F39C42','#f5b860','#e86840','#f0c070','#e89050','#5CA858','#e87848','#c06050','#60b0d0','#80d090','#d0a0f0'];
-                const entriesWithOther = [...topEntries];
-                if (otherCount>0) entriesWithOther.push(['其他',{count:otherCount,emoji:'📦'}]);
-                let progress = 0;
-                const STEP = 0.04;
-                function drawFrame() {
-                    ctx.clearRect(0,0,cw,totalHeight);
-                    let startAngle = -Math.PI/2;
-                    entriesWithOther.forEach(([food, data], i) => {
-                        const targetAngle = (data.count / total) * Math.PI * 2;
-                        let sliceAngle;
-                        if (i === entriesWithOther.length - 1) {
-                            sliceAngle = (2 * Math.PI * progress) - (startAngle + Math.PI/2);
-                            if (sliceAngle < 0) sliceAngle = 0;
-                        } else {
-                            sliceAngle = targetAngle * progress;
-                        }
-                        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radius,startAngle,startAngle+sliceAngle); ctx.closePath();
-                        ctx.fillStyle = colors[i % colors.length]; ctx.fill();
-                        ctx.strokeStyle = '#FFF8F0'; ctx.lineWidth = 2; ctx.stroke();
-                        if (progress > 0.8) {
-                            const midAngle = startAngle + sliceAngle/2;
-                            const textRadius = radius + 24;
-                            let tx = cx + Math.cos(midAngle)*textRadius;
-                            let ty = cy + Math.sin(midAngle)*textRadius;
-                            tx = Math.min(Math.max(tx, 35), cw-35);
-                            ty = Math.min(Math.max(ty, 25), totalHeight-25);
-                            const shortName = food.length>2 ? food.slice(0,2)+'…' : food;
-                            const percent = Math.round(data.count/total*100);
-                            ctx.fillStyle='#3C2415';
-                            ctx.font='600 10px "PingFang SC","Microsoft YaHei",sans-serif';
-                            ctx.textAlign='center';
-                            ctx.fillText(shortName, tx, ty-2);
-                            ctx.fillText(percent+'%', tx, ty+12);
-                        }
-                        startAngle += sliceAngle;
-                    });
-                    progress += STEP;
-                    if (progress < 1) {
-                        pieAnimFrame = requestAnimationFrame(drawFrame);
-                    } else {
-                        ctx.clearRect(0,0,cw,totalHeight);
-                        let finalAngle = -Math.PI/2;
-                        entriesWithOther.forEach(([food, data], i) => {
-                            const targetAngle = (data.count / total) * Math.PI * 2;
-                            const sliceAngle = (i === entriesWithOther.length - 1) ? (2 * Math.PI - (finalAngle + Math.PI/2)) : targetAngle;
-                            ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radius,finalAngle,finalAngle+sliceAngle); ctx.closePath();
-                            ctx.fillStyle = colors[i % colors.length]; ctx.fill();
-                            ctx.strokeStyle = '#FFF8F0'; ctx.lineWidth = 2; ctx.stroke();
-                            const midAngle = finalAngle + sliceAngle/2;
-                            const textRadius = radius + 24;
-                            let tx = cx + Math.cos(midAngle)*textRadius;
-                            let ty = cy + Math.sin(midAngle)*textRadius;
-                            tx = Math.min(Math.max(tx,35), cw-35);
-                            ty = Math.min(Math.max(ty,25), totalHeight-25);
-                            const shortName = food.length>2 ? food.slice(0,2)+'…' : food;
-                            const percent = Math.round(data.count/total*100);
-                            ctx.fillStyle='#3C2415';
-                            ctx.font='600 10px "PingFang SC","Microsoft YaHei",sans-serif';
-                            ctx.textAlign='center';
-                            ctx.fillText(shortName, tx, ty-2);
-                            ctx.fillText(percent+'%', tx, ty+12);
-                            finalAngle += sliceAngle;
-                        });
-                    }
-                }
-                drawFrame();
-            }
+            function drawPieChartAnimated(topEntries, otherCount, total) { if (pieAnimFrame) cancelAnimationFrame(pieAnimFrame); const canvas = $pieCanvas; const container = canvas.parentElement; const cw = Math.max(container.clientWidth-8,280); const pieSize = Math.min(cw*0.65,160); const cx = cw/2, cy = pieSize/2+30; const radius = pieSize/2; const totalHeight = pieSize+70; const dpr = Math.min(devicePixelRatio||1,2); canvas.width = cw*dpr; canvas.height = totalHeight*dpr; canvas.style.width = cw+'px'; canvas.style.height = totalHeight+'px'; const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr); const colors = ['#E84C3D','#F39C42','#f5b860','#e86840','#f0c070','#e89050','#5CA858','#e87848','#c06050','#60b0d0','#80d090','#d0a0f0']; const entriesWithOther = [...topEntries]; if (otherCount>0) entriesWithOther.push(['其他',{count:otherCount,emoji:'📦'}]); let progress = 0; const STEP = 0.04; function drawFrame() { ctx.clearRect(0,0,cw,totalHeight); let startAngle = -Math.PI/2; entriesWithOther.forEach(([food, data], i) => { const targetAngle = (data.count / total) * Math.PI * 2; let sliceAngle; if (i === entriesWithOther.length - 1) { sliceAngle = (2 * Math.PI * progress) - (startAngle + Math.PI/2); if (sliceAngle < 0) sliceAngle = 0; } else { sliceAngle = targetAngle * progress; } ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radius,startAngle,startAngle+sliceAngle); ctx.closePath(); ctx.fillStyle = colors[i % colors.length]; ctx.fill(); ctx.strokeStyle = '#FFF8F0'; ctx.lineWidth = 2; ctx.stroke(); if (progress > 0.8) { const midAngle = startAngle + sliceAngle/2; const textRadius = radius + 24; let tx = cx + Math.cos(midAngle)*textRadius, ty = cy + Math.sin(midAngle)*textRadius; tx = Math.min(Math.max(tx, 35), cw-35); ty = Math.min(Math.max(ty, 25), totalHeight-25); const shortName = food.length>2 ? food.slice(0,2)+'…' : food; const percent = Math.round(data.count/total*100); ctx.fillStyle='#3C2415'; ctx.font='600 10px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='center'; ctx.fillText(shortName, tx, ty-2); ctx.fillText(percent+'%', tx, ty+12); } startAngle += sliceAngle; }); progress += STEP; if (progress < 1) { pieAnimFrame = requestAnimationFrame(drawFrame); } else { ctx.clearRect(0,0,cw,totalHeight); let finalAngle = -Math.PI/2; entriesWithOther.forEach(([food, data], i) => { const targetAngle = (data.count / total) * Math.PI * 2; const sliceAngle = (i === entriesWithOther.length - 1) ? (2 * Math.PI - (finalAngle + Math.PI/2)) : targetAngle; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,radius,finalAngle,finalAngle+sliceAngle); ctx.closePath(); ctx.fillStyle = colors[i % colors.length]; ctx.fill(); ctx.strokeStyle = '#FFF8F0'; ctx.lineWidth = 2; ctx.stroke(); const midAngle = finalAngle + sliceAngle/2; const textRadius = radius + 24; let tx = cx + Math.cos(midAngle)*textRadius, ty = cy + Math.sin(midAngle)*textRadius; tx = Math.min(Math.max(tx,35), cw-35); ty = Math.min(Math.max(ty,25), totalHeight-25); const shortName = food.length>2 ? food.slice(0,2)+'…' : food; const percent = Math.round(data.count/total*100); ctx.fillStyle='#3C2415'; ctx.font='600 10px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign='center'; ctx.fillText(shortName, tx, ty-2); ctx.fillText(percent+'%', tx, ty+12); finalAngle += sliceAngle; }); } } drawFrame(); }
 
             function updateStats() {
                 const logs = getFilteredLogsForStats();
                 const stats = {}; logs.forEach(l=>{ if(!stats[l.food]) stats[l.food]={count:0,emoji:l.emoji}; stats[l.food].count++; });
                 const today = new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'}).trim();
                 const entries = Object.entries(stats).sort((a,b)=>b[1].count-a[1].count);
-                if(!entries.length) {
-                    $chartCanvas.style.display='none'; $pieCanvas.style.display='none'; $chartEmpty.style.display='block';
-                    $statTotal.textContent = '0'; $statToday.textContent = '0'; $statFavorite.textContent = '-';
-                    return;
-                }
+                if(!entries.length) { $chartCanvas.style.display='none'; $pieCanvas.style.display='none'; $chartEmpty.style.display='block'; $statTotal.textContent = '0'; $statToday.textContent = '0'; $statFavorite.textContent = '-'; return; }
                 $chartCanvas.style.display='block'; $pieCanvas.style.display='block'; $chartEmpty.style.display='none';
                 const total = logs.length;
-                const prevTotal = parseInt($statTotal.textContent) || 0;
-                const prevToday = parseInt($statToday.textContent) || 0;
+                const prevTotal = parseInt($statTotal.textContent) || 0; const prevToday = parseInt($statToday.textContent) || 0;
                 animateValue($statTotal, prevTotal, total, 400);
                 const todayCount = logs.filter(l=>l.date.trim()===today).length;
                 animateValue($statToday, prevToday, todayCount, 400);
-                let max=0, fav='-'; Object.entries(stats).forEach(([f,d])=>{ if(d.count>max){ max=d.count; fav=d.emoji+' '+f; } });
-                $statFavorite.textContent = fav;
-                const MAX_BARS = 12;
-                let otherCount = 0;
+                let max=0, fav='-'; Object.entries(stats).forEach(([f,d])=>{ if(d.count>max){ max=d.count; fav=d.emoji+' '+f; } }); $statFavorite.textContent = fav;
+                const MAX_BARS = 12; let otherCount = 0;
                 if(entries.length > MAX_BARS) otherCount = entries.slice(MAX_BARS).reduce((s,[,d])=>s+d.count,0);
                 drawBarChart(entries, otherCount);
                 drawPieChartAnimated(entries.slice(0, MAX_BARS), otherCount, total);
@@ -1484,74 +414,55 @@
                 const foods = getActiveFoods(), f = menuFilter.trim().toLowerCase();
                 const filtered = f ? foods.filter(x=>x.name.includes(f)||x.category.includes(f)||x.emoji.includes(f)) : foods;
                 if(!filtered.length) { $menuList.innerHTML = `<li class="menu-empty">${f?'没有匹配':'菜单为空，点 + 添加'}</li>`; }
-                else {
-                    $menuList.innerHTML = filtered.map((food,i)=>`<li class="menu-item"><span class="menu-item-emoji">${food.emoji}</span><span class="menu-item-name" title="${food.name}">${food.name}</span><span class="menu-item-category">${food.category}</span><span class="menu-item-actions"><button class="btn-edit-item" data-idx="${foods.indexOf(food)}">✎</button><button class="btn-delete-item" data-idx="${foods.indexOf(food)}">×</button></span></li>`).join('');
-                }
+                else { $menuList.innerHTML = filtered.map((food,i)=>`<li class="menu-item"><span class="menu-item-emoji">${food.emoji}</span><span class="menu-item-name" title="${food.name}">${food.name}</span><span class="menu-item-category">${food.category}</span><span class="menu-item-actions"><button class="btn-edit-item" data-idx="${foods.indexOf(food)}">✎</button><button class="btn-delete-item" data-idx="${foods.indexOf(food)}">×</button></span></li>`).join(''); }
                 $menuStats.textContent = `共 ${foods.length} 个菜品${f?`，匹配 ${filtered.length} 个`:''}`;
                 $$('.btn-edit-item').forEach(b=>b.onclick=()=>openFoodModal('edit',+b.dataset.idx));
                 $$('.btn-delete-item').forEach(b=>b.onclick=()=>deleteFood(+b.dataset.idx));
             }
             function refreshAll() { $profileNameText.textContent=getActiveProfile(); $profileCount.textContent=getProfileNames().length+'人'; renderLogs(); updateStats(); renderMenu(); updateProfileArrowState(); }
             function updateProfileArrowState() { const count = getProfileNames().length; $('#btnPrevProfile').disabled = (count <= 1); $('#btnNextProfile').disabled = (count <= 1); }
-
             function spawnParticles(x,y) { const colors = ['#F39C42','#E84C3D','#ff6b8a','#5ba0d8','#6bc77a']; const frag = document.createDocumentFragment(); for(let i=0;i<30;i++) { const p = document.createElement('div'); p.className='particle'; const size=Math.random()*5+2, angle=Math.random()*Math.PI*2, dist=Math.random()*80+30; p.style.cssText=`left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${colors[~~(Math.random()*colors.length)]};--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;animation-duration:${Math.random()*0.3+0.4}s;`; frag.appendChild(p); } $particlesContainer.appendChild(frag); setTimeout(()=>{ $particlesContainer.innerHTML = ''; }, 800); }
             function getTrayCenter(){ const r=$resultTray.getBoundingClientRect(); return {x:r.left+r.width/2, y:r.top+r.height/2}; }
             function getGlobeBottom(){ const r=$('#globeFrame').getBoundingClientRect(); return {x:r.left+r.width/2, y:r.bottom-6}; }
-
             function playBeep(){ try{const c=new AudioContext();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(500,c.currentTime);o.frequency.linearRampToValueAtTime(1000,c.currentTime+0.2);g.gain.setValueAtTime(0.15,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.3);o.start();o.stop(c.currentTime+0.3);}catch(e){} }
             function playTick(){ try{const c=new AudioContext();const o=c.createOscillator();const g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(300,c.currentTime);g.gain.setValueAtTime(0.03,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.05);o.start();o.stop(c.currentTime+0.05);}catch(e){} }
             function showToast(msg){ clearTimeout(window.toastTimer); $toast.textContent=msg; $toast.classList.add('show'); window.toastTimer=setTimeout(()=>$toast.classList.remove('show'),2000); }
             function vibrate(p){ if(navigator.vibrate) navigator.vibrate(p); }
 
-            function startRoll() {
-                if(isRolling) return;
-                const foods = getActiveFoods();
-                if(!foods.length) { showToast('⚠️ 菜单为空'); return; }
-                setRollingState(true); $btnShake.disabled = true; clearTray();
-                $gachaMachine.classList.add('shaking'); $handleKnob.classList.add('spinning');
-                const selected = foods[Math.floor(Math.random()*foods.length)];
-                currentResult = selected;
-                const ballColor = BALL_COLORS[Math.floor(Math.random()*BALL_COLORS.length)];
-                $ballsSpinner.classList.add('rolling-fast'); repositionBalls(); vibrate([10,20]);
-                const duration = 1300+Math.random()*400, tickInt = 65, maxTicks = Math.floor(duration/tickInt);
-                let tickCount = 0;
-                function tick() {
-                    if(tickCount>=maxTicks) {
-                        $ballsSpinner.classList.remove('rolling-fast'); $ballsSpinner.classList.add('rolling-slow');
-                        repositionBalls(); playTick();
-                        setTimeout(()=>{
-                            $ballsSpinner.classList.remove('rolling-slow');
-                            $gachaMachine.classList.remove('shaking'); $handleKnob.classList.remove('spinning');
-                            repositionBalls(); vibrate([20,30]);
-                            const gb = getGlobeBottom();
-                            const falling = document.createElement('div'); falling.className='falling-ball';
-                            falling.style.cssText = `left:${gb.x-15}px;top:${gb.y-15}px;width:30px;height:30px;background:radial-gradient(circle at 36% 30%,${lighten(ballColor,30)} 0%,${ballColor} 55%,${darken(ballColor,25)} 100%);animation:fallToTray 0.65s cubic-bezier(0.35,0.9,0.3,1) forwards;`;
-                            document.body.appendChild(falling);
-                            function onAnimEnd() { falling.removeEventListener('animationend', onAnimEnd); if(falling.parentNode) falling.remove(); showResult(selected); playBeep(); spawnParticles(getTrayCenter().x, getTrayCenter().y); $btnShake.disabled=false; setRollingState(false); shakeCooldown=true; setTimeout(()=>{ shakeCooldown=false; }, 1500); }
-                            falling.addEventListener('animationend', onAnimEnd);
-                        }, 400);
-                        return;
-                    }
-                    repositionBalls(); if(tickCount%3===0) playTick(); tickCount++; setTimeout(tick, tickInt);
-                }
-                tick();
-            }
-
+            function startRoll() { if(isRolling) return; const foods = getActiveFoods(); if(!foods.length) { showToast('⚠️ 菜单为空'); return; } setRollingState(true); $btnShake.disabled = true; clearTray(); $gachaMachine.classList.add('shaking'); $handleKnob.classList.add('spinning'); const selected = foods[Math.floor(Math.random()*foods.length)]; currentResult = selected; const ballColor = BALL_COLORS[Math.floor(Math.random()*BALL_COLORS.length)]; $ballsSpinner.classList.add('rolling-fast'); repositionBalls(); vibrate([10,20]); const duration = 1300+Math.random()*400, tickInt = 65, maxTicks = Math.floor(duration/tickInt); let tickCount = 0; function tick() { if(tickCount>=maxTicks) { $ballsSpinner.classList.remove('rolling-fast'); $ballsSpinner.classList.add('rolling-slow'); repositionBalls(); playTick(); setTimeout(()=>{ $ballsSpinner.classList.remove('rolling-slow'); $gachaMachine.classList.remove('shaking'); $handleKnob.classList.remove('spinning'); repositionBalls(); vibrate([20,30]); const gb = getGlobeBottom(); const falling = document.createElement('div'); falling.className='falling-ball'; falling.style.cssText = `left:${gb.x-15}px;top:${gb.y-15}px;width:30px;height:30px;background:radial-gradient(circle at 36% 30%,${lighten(ballColor,30)} 0%,${ballColor} 55%,${darken(ballColor,25)} 100%);animation:fallToTray 0.65s cubic-bezier(0.35,0.9,0.3,1) forwards;`; document.body.appendChild(falling); function onAnimEnd() { falling.removeEventListener('animationend', onAnimEnd); if(falling.parentNode) falling.remove(); showResult(selected); playBeep(); spawnParticles(getTrayCenter().x, getTrayCenter().y); $btnShake.disabled=false; setRollingState(false); shakeCooldown=true; setTimeout(()=>{ shakeCooldown=false; }, 1500); } falling.addEventListener('animationend', onAnimEnd); }, 400); return; } repositionBalls(); if(tickCount%3===0) playTick(); tickCount++; setTimeout(tick, tickInt); } tick(); }
             function confirmResult() { if(!currentResult) return; addLog(currentResult); refreshAll(); showToast(`✅ 已记录：${currentResult.name}`); clearTray(); $btnShake.disabled=false; shakeCooldown=false; }
             function reroll() { clearTray(); $btnShake.disabled=false; shakeCooldown=false; setTimeout(startRoll, 200); }
-
             let lastShake=0;
             function handleDM(e) { if(isRolling||shakeCooldown||$btnConfirm.style.display!=='none') return; const a=e.accelerationIncludingGravity; if(!a) return; const m=Math.sqrt((a.x||0)**2+(a.y||0)**2+(a.z||0)**2); if(m>15&&Date.now()-lastShake>1800){ lastShake=Date.now(); startRoll(); } }
             function initMotion() { if(window.DeviceMotionEvent){ if(typeof DeviceMotionEvent.requestPermission==='function'){ $btnShake.addEventListener('click',function req(){ DeviceMotionEvent.requestPermission().then(s=>{if(s==='granted')window.addEventListener('devicemotion',handleDM);}); },{once:true}); } else window.addEventListener('devicemotion',handleDM); } }
 
-            function openModal(title,html){ $modalContainer.innerHTML = `<div class="modal-overlay" id="overlay"><div class="modal"><h3>${title}</h3>${html}</div></div>`; $('#overlay').onclick=e=>{if(e.target===e.currentTarget)closeModal();}; }
+            function openModal(title, html, footerHtml) {
+                let footerStr = footerHtml ? `<div class="modal-footer">${footerHtml}</div>` : '';
+                $modalContainer.innerHTML = `
+                    <div class="modal-overlay" id="overlay">
+                        <div class="modal">
+                            <div class="modal-header"><h3>${title}</h3></div>
+                            <div class="modal-body">${html}</div>
+                            ${footerStr}
+                        </div>
+                    </div>`;
+                $('#overlay').onclick = e => { if (e.target === e.currentTarget) closeModal(); };
+            }
             function closeModal(){ $modalContainer.innerHTML=''; }
+
             function openFoodModal(mode,idx){
                 const foods = getActiveFoods(); const isEdit = mode==='edit'&&idx>=0&&idx<foods.length;
                 const food = isEdit ? foods[idx] : {name:'',emoji:'🍽️',category:'自定义'};
                 const emojis = ['🍖','🐔','🌶️','🐷','🥩','🥢','🍅','🐟','🍗','🍜','🥒','🍝','🔥','🥟','🍕','🍔','🍣','🍚','🥘','🍢','🫕','🐌','🍛','🥪','🍲','🦆','🥚','🍟'];
                 let selectedEmoji = food.emoji;
-                openModal(isEdit?'编辑菜品':'添加菜品',`<div class="form-group"><label>选择图标</label><div class="selected-emoji-display" id="selectedEmojiDisplay">${selectedEmoji}</div><div class="emoji-picker-large" id="emojiPickerLarge">${emojis.map(e=>`<button class="${e===selectedEmoji?'selected':''}">${e}</button>`).join('')}</div></div><div class="form-group"><label>名称 *</label><input id="foodName" value="${food.name}" maxlength="20"></div><div class="form-group"><label>分类</label><input id="foodCategory" value="${food.category}" maxlength="15"></div><div class="btn-row"><button class="btn btn-sm btn-ghost" id="cancelFood">取消</button><button class="btn btn-sm btn-shake" id="saveFood">${isEdit?'保存':'添加'}</button></div>`);
+                const title = isEdit ? '编辑菜品' : '添加菜品';
+                const bodyHtml = `
+                    <div class="form-group"><label>选择图标</label><div class="selected-emoji-display" id="selectedEmojiDisplay">${selectedEmoji}</div><div class="emoji-picker-large" id="emojiPickerLarge">${emojis.map(e=>`<button class="${e===selectedEmoji?'selected':''}">${e}</button>`).join('')}</div></div>
+                    <div class="form-group"><label>名称 *</label><input id="foodName" value="${food.name}" maxlength="20"></div>
+                    <div class="form-group"><label>分类</label><input id="foodCategory" value="${food.category}" maxlength="15"></div>
+                `;
+                const footerHtml = `<div class="btn-row"><button class="btn btn-sm btn-ghost" id="cancelFood">取消</button><button class="btn btn-sm btn-shake" id="saveFood">${isEdit?'保存':'添加'}</button></div>`;
+                openModal(title, bodyHtml, footerHtml);
                 setTimeout(()=>{
                     const display = $('#selectedEmojiDisplay'), picker = $('#emojiPickerLarge');
                     picker.querySelectorAll('button').forEach(btn=>{ btn.addEventListener('click',()=>{ picker.querySelectorAll('button').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); selectedEmoji=btn.textContent; display.textContent=selectedEmoji; }); });
@@ -1559,22 +470,14 @@
                     $('#saveFood').onclick=()=>{ const name=$('#foodName').value.trim(), cat=$('#foodCategory').value.trim()||'自定义'; if(!name){ showToast('请输入名称'); return; } if(isEdit) foods[idx]={name,emoji:selectedEmoji,category:cat}; else foods.push({name,emoji:selectedEmoji,category:cat}); saveData(appData); closeModal(); renderMenu(); showToast(isEdit?'✅ 已更新':'✅ 已添加'); };
                 },50);
             }
-            function deleteFood(idx){ const foods=getActiveFoods(); if(idx<0||idx>=foods.length) return; openModal('删除确认',`<p style="text-align:center;">删除 <b>${foods[idx].emoji} ${foods[idx].name}</b>？</p><div class="btn-row" style="justify-content:center;"><button class="btn btn-sm btn-ghost" id="cancelDel">取消</button><button class="btn btn-sm btn-danger" id="confirmDel">删除</button></div>`); setTimeout(()=>{ $('#cancelDel').onclick=closeModal; $('#confirmDel').onclick=()=>{ foods.splice(idx,1); saveData(appData); closeModal(); renderMenu(); showToast('🗑️ 已删除'); }; },50); }
-            function openProfileManager(){
-                const names=getProfileNames(), active=getActiveProfile();
-                openModal('👥 人物管理',`<ul class="profile-manage-list" id="profileList">${names.map(n=>`<li class="profile-manage-item${n===active?' active-profile':''}" data-name="${n}"><span class="profile-manage-name">👤 ${n}</span><span class="profile-manage-count">${appData.profiles[n].foods.length}个</span><button class="btn btn-sm btn-ghost rename-btn">✎</button>${names.length>1?`<button class="btn btn-sm btn-danger del-btn">×</button>`:''}</li>`).join('')}</ul><div class="btn-row" style="justify-content:center;margin-top:8px;"><button class="btn btn-sm btn-outline" id="addProfile">+ 添加人物</button></div>`);
-                setTimeout(()=>{
-                    $$('#profileList li').forEach(li=>li.onclick=e=>{ if(e.target.closest('button')) return; setActiveProfile(li.dataset.name); appData=loadData(); refreshAll(); closeModal(); });
-                    $$('.rename-btn').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const old=b.closest('li').dataset.name; openProfileInputModal('重命名人物','请输入新名称：',old,(newName)=>{ if(renameProfile(old,newName)){ appData=loadData(); refreshAll(); closeModal(); openProfileManager(); } }); });
-                    $$('.del-btn').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const name=b.closest('li').dataset.name; openConfirmModal('删除人物',`确定删除人物"${name}"及其所有菜单吗？`,()=>{ if(deleteProfile(name)){ appData=loadData(); refreshAll(); closeModal(); openProfileManager(); } }); });
-                    $('#addProfile').onclick=()=>{ openProfileInputModal('添加人物','请输入新人物名称：','',(name)=>{ if(addProfile(name)){ setActiveProfile(name.trim()); appData=loadData(); refreshAll(); closeModal(); openProfileManager(); } }); };
-                },50);
-            }
-            function openProfileInputModal(title,label,defaultValue,callback){ openModal(title,`<div class="form-group"><label>${label}</label><input id="profileInputValue" value="${defaultValue}" maxlength="20"></div><div class="btn-row"><button class="btn btn-sm btn-ghost" id="cancelInput">取消</button><button class="btn btn-sm btn-shake" id="confirmInput">确定</button></div>`); setTimeout(()=>{ $('#cancelInput').onclick=closeModal; $('#confirmInput').onclick=()=>{ const val=$('#profileInputValue').value.trim(); if(!val){ showToast('请输入有效名称'); return; } callback(val); }; $('#profileInputValue').addEventListener('keydown',(e)=>{ if(e.key==='Enter') $('#confirmInput').click(); }); $('#profileInputValue').focus(); },50); }
-            function openConfirmModal(title,message,callback){ openModal(title,`<p style="text-align:center;color:#6B4F3A;margin-bottom:15px;">${message}</p><div class="btn-row" style="justify-content:center;"><button class="btn btn-sm btn-ghost" id="cancelConfirm">取消</button><button class="btn btn-sm btn-danger" id="confirmYes">确认</button></div>`); setTimeout(()=>{ $('#cancelConfirm').onclick=closeModal; $('#confirmYes').onclick=()=>{ callback(); closeModal(); }; },50); }
+            function deleteFood(idx){ const foods=getActiveFoods(); if(idx<0||idx>=foods.length) return; openModal('删除确认',`<p style="text-align:center;">删除 <b>${foods[idx].emoji} ${foods[idx].name}</b>？</p>`,`<div class="btn-row" style="justify-content:center;"><button class="btn btn-sm btn-ghost" id="cancelDel">取消</button><button class="btn btn-sm btn-danger" id="confirmDel">删除</button></div>`); setTimeout(()=>{ $('#cancelDel').onclick=closeModal; $('#confirmDel').onclick=()=>{ foods.splice(idx,1); saveData(appData); closeModal(); renderMenu(); showToast('🗑️ 已删除'); }; },50); }
+            function openProfileManager(){ const names=getProfileNames(), active=getActiveProfile(); openModal('👥 人物管理',`<ul class="profile-manage-list" id="profileList">${names.map(n=>`<li class="profile-manage-item${n===active?' active-profile':''}" data-name="${n}"><span class="profile-manage-name">👤 ${n}</span><span class="profile-manage-count">${appData.profiles[n].foods.length}个</span><button class="btn btn-sm btn-ghost rename-btn">✎</button>${names.length>1?`<button class="btn btn-sm btn-danger del-btn">×</button>`:''}</li>`).join('')}</ul>`,`<div class="btn-row" style="justify-content:center;margin-top:8px;"><button class="btn btn-sm btn-outline" id="addProfile">+ 添加人物</button></div>`); setTimeout(()=>{ $$('#profileList li').forEach(li=>li.onclick=e=>{ if(e.target.closest('button')) return; setActiveProfile(li.dataset.name); appData=loadData(); refreshAll(); closeModal(); }); $$('.rename-btn').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const old=b.closest('li').dataset.name; openProfileInputModal('重命名人物','请输入新名称：',old,(newName)=>{ if(renameProfile(old,newName)){ appData=loadData(); refreshAll(); closeModal(); openProfileManager(); } }); }); $$('.del-btn').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const name=b.closest('li').dataset.name; openConfirmModal('删除人物',`确定删除人物"${name}"及其所有菜单吗？`,()=>{ if(deleteProfile(name)){ appData=loadData(); refreshAll(); closeModal(); openProfileManager(); } }); }); $('#addProfile').onclick=()=>{ openProfileInputModal('添加人物','请输入新人物名称：','',(name)=>{ if(addProfile(name)){ setActiveProfile(name.trim()); appData=loadData(); refreshAll(); closeModal(); openProfileManager(); } }); }; },50); }
+            function openProfileInputModal(title,label,defaultValue,callback){ openModal(title,`<div class="form-group"><label>${label}</label><input id="profileInputValue" value="${defaultValue}" maxlength="20"></div>`,`<div class="btn-row"><button class="btn btn-sm btn-ghost" id="cancelInput">取消</button><button class="btn btn-sm btn-shake" id="confirmInput">确定</button></div>`); setTimeout(()=>{ $('#cancelInput').onclick=closeModal; $('#confirmInput').onclick=()=>{ const val=$('#profileInputValue').value.trim(); if(!val){ showToast('请输入有效名称'); return; } callback(val); }; $('#profileInputValue').addEventListener('keydown',(e)=>{ if(e.key==='Enter') $('#confirmInput').click(); }); $('#profileInputValue').focus(); },50); }
+            function openConfirmModal(title,message,callback){ openModal(title,`<p style="text-align:center;color:#6B4F3A;margin-bottom:15px;">${message}</p>`,`<div class="btn-row" style="justify-content:center;"><button class="btn btn-sm btn-ghost" id="cancelConfirm">取消</button><button class="btn btn-sm btn-danger" id="confirmYes">确认</button></div>`); setTimeout(()=>{ $('#cancelConfirm').onclick=closeModal; $('#confirmYes').onclick=()=>{ callback(); closeModal(); }; },50); }
 
             function switchPage(page) { $$('.page').forEach(p=>p.classList.remove('active')); $$('.nav-btn').forEach(b=>b.classList.remove('active')); if(page==='main'){ $('#pageMain').classList.add('active'); document.querySelector('.nav-btn[data-page="main"]').classList.add('active'); } else { $('#pageRecords').classList.add('active'); document.querySelector('.nav-btn[data-page="records"]').classList.add('active'); } }
             function switchSubTab(tab) { $$('.records-tab').forEach(t=>t.classList.remove('active')); document.querySelector(`.records-tab[data-sub="${tab}"]`).classList.add('active'); $('#subLog').classList.toggle('hidden', tab!=='log'); $('#subStats').classList.toggle('hidden', tab!=='stats'); $('#subMenu').classList.toggle('hidden', tab!=='menu'); if(tab==='stats') updateStats(); if(tab==='menu') renderMenu(); }
+            function setDefaultDates() { const today = new Date(); const yyyy = today.getFullYear(); const mm = String(today.getMonth()+1).padStart(2,'0'); const dd = String(today.getDate()).padStart(2,'0'); const dateStr = `${yyyy}-${mm}-${dd}`; $logDateInput.value = dateStr; logFilterDate = `${yyyy}/${mm}/${dd}`; $statsDateInput.value = dateStr; statsFilterDate = `${yyyy}/${mm}/${dd}`; statsViewMode = 'day'; $statsModeSelect.value = 'day'; $statsDateInput.disabled = false; $statsDateInput.type = 'date'; updateProfileArrowState(); }
 
             $btnShake.onclick = ()=>!isRolling&&startRoll();
             $btnConfirm.onclick = confirmResult;
@@ -1591,11 +494,10 @@
             $logDateInput.onchange = (e) => { logFilterDate = e.target.value ? e.target.value.split('-').map(v=>v.padStart(2,'0')).join('/').trim() : ''; renderLogs(); };
             $statsModeSelect.onchange = (e) => { statsViewMode = e.target.value; const input=$statsDateInput; input.value=''; statsFilterDate=''; if(statsViewMode==='all'){ input.disabled=true; input.type='date'; } else if(statsViewMode==='day'){ input.disabled=false; input.type='date'; } else if(statsViewMode==='month'){ input.disabled=false; input.type='month'; } else if(statsViewMode==='year'){ input.disabled=false; input.type='number'; input.min='2020'; input.max='2099'; input.step='1'; input.placeholder='输入年份'; } updateStats(); };
             $statsDateInput.onchange = (e) => { const val=e.target.value; if(statsViewMode==='day') statsFilterDate = val.split('-').map(v=>v.padStart(2,'0')).join('/').trim(); else if(statsViewMode==='month') statsFilterDate = val.replace('-','/').trim(); else if(statsViewMode==='year') statsFilterDate = val.trim(); updateStats(); };
-
             window.addEventListener('keydown',e=>{ if((e.code==='Space'||e.code==='Enter')&&document.activeElement===document.body&&!isRolling&&$btnConfirm.style.display==='none'){ e.preventDefault(); startRoll(); } });
             window.addEventListener('resize',()=>{ repositionBalls(); if(!$('#subStats').classList.contains('hidden')) updateStats(); });
 
-            function init() { createStars(); createGachaBalls(); refreshAll(); initMotion(); clearTray(); $ballsSpinner.style.transform = 'rotate('+Math.random()*360+'deg)'; }
+            function init() { createStars(); createGachaBalls(); appData = loadData(); setDefaultDates(); refreshAll(); initMotion(); clearTray(); $ballsSpinner.style.transform = 'rotate('+Math.random()*360+'deg)'; }
             init();
         })();
     </script>
